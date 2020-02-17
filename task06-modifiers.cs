@@ -14,29 +14,29 @@ using System.Linq;
 
 public abstract class BaseClass
 {
-	public virtual string GetCode() { return "CODE-1"; }
+	public string GetCode() { return "CODE-1"; }
 	public string GetDescription() { return this.GetDefaultDescription() + this.GetClassSymbol(); }
-	public virtual string GetDefaultDescription() { return "CLASS-"; }
-	public abstract string GetClassSymbol();
+	protected virtual string GetDefaultDescription() { return "CLASS-"; }
+	protected abstract string GetClassSymbol();
 }
 
 internal class DerivedClassA : BaseClass
 {
-	public override string GetCode() { return this.GetCurrentCode(); }
+	public new string GetCode() { return this.GetCurrentCode(); }
 	protected string GetCurrentCode() { return "CODE-2"; }
-	public override string GetClassSymbol() { return "A"; }
+	protected override string GetClassSymbol() { return "A"; }
 }
 
-class DerivedClassB : DerivedClassA
+internal class DerivedClassB : DerivedClassA
 {
 	class DerivedClassImpl
 	{
 		internal static string GetCode() { return "CODE-3"; }
 	}
 
-	public override string GetCode() { return DerivedClassImpl.GetCode(); }
-	public override string GetDefaultDescription() { return string.Empty; }
-	public override string GetClassSymbol() { return "B"; }
+	public new string GetCode() { return DerivedClassImpl.GetCode(); }
+	protected override string GetDefaultDescription() { return string.Empty; }
+	protected override string GetClassSymbol() { return "B"; }
 }
 
 // ----- ЗАПРЕЩЕНО ИЗМЕНЯТЬ КОД В КЛАССЕ PROGRAM -----
@@ -50,7 +50,6 @@ public class Program
 
 		VerifyModifiers();
 		VerifyAccessibilityLevels(typeof(BaseClass), s2, typeof(DerivedClassA), s3, typeof(DerivedClassB));
-		Console.ReadLine();
 	}
 
 	private static void VerifyModifiers()
